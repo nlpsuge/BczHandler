@@ -10,7 +10,7 @@ You may found *.zpk in you phone and then extract them by yourself. Or just down
 3. Execute command </br>
 for file in $(find . -name meta.json) ; do cat $file && echo  ;done > your_path/baicizhan_zpk-master/mata-json-content.txt
 4. Open Anki, then modify 'your_path'
-5. Create Field in Anki</br>
+5. Create Fields in Anki</br>
 baicizhan-mean_cn</br>
 baicizhan-mean_en</br>
 reminder-baicizhan</br>
