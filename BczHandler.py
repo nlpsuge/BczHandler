@@ -15,9 +15,6 @@ class BczHandler():
         self.json_content_file = 'your_path/baicizhan_zpk-master/mata-json-content.txt'
         self.file = open(self.json_content_file, 'r')
         self.json_content = self.file.readlines()
-        self.file_list_file_path = 'your_path/baicizhan_zpk-master/extra_zpk_result.txt'
-        self.file_list = open(self.file_list_file_path, 'r')
-        self.file_list_content = self.file_list.readlines()
         self.log_file_path = 'your_path/logs/anki/bcz_handler.log'
         self.log = self._setup_logger(self.log_file_path)
         self.shortCut = 'Ctrl + C'
