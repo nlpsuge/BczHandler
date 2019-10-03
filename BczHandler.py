@@ -1,8 +1,7 @@
 import json
 import logging
 
-from PyQt4.QtCore import SIGNAL
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 import anki, aqt, re
 import os
 
@@ -21,16 +20,15 @@ class BczHandler():
 
         def setup_Menu(_browser):
             self.anki_media_path = os.path.join(_browser.mw.pm.profileFolder(), "collection.media/")
-            menu = QtGui.QMenu('BczHandler', _browser.form.menubar)
+            menu = QtWidgets.QMenu('BczHandler', _browser.form.menubar)
             _browser.form.menubar.addMenu(menu)
 
             def append_Munu(_text, how):
-                action = QtGui.QAction(_text, menu)
+                action = QtWidgets.QAction(_text, menu)
                 # set shot cut
-                from PyQt4.QtGui import QKeySequence
+                from PyQt5.QtGui import QKeySequence
                 action.setShortcut(QKeySequence(self.shortCut))
-                _browser.connect(action, SIGNAL('triggered()'),
-                                 lambda s=_browser: self._run(s,))
+                action.triggered.connect(lambda _, b=_browser: self._run(b))
                 menu.addAction(action)
 
             append_Munu('Import selected word(s)...', 'useless parameter')
@@ -46,18 +44,18 @@ class BczHandler():
         for note in _notes:
             word = None
             try:
-                word = unicode.strip(note['Front'])
+                word = str.strip(note['Front'])
                 self.log.info('Processing the word [%s]', word)
 
-                if 'baicizhan-mean_cn' not in note.keys():
+                if 'baicizhan-mean_cn' not in list(note.keys()):
                     self.log.info('The word [%s] does not have field of "baicizhan-mean_cn"', word)
                     continue
 
-                if 'baicizhan-mean_en' not in note.keys():
+                if 'baicizhan-mean_en' not in list(note.keys()):
                     self.log.info('The word [%s] does not have field of "baicizhan-mean_en"', word)
                     continue
 
-                if 'reminder-baicizhan' not in note.keys():
+                if 'reminder-baicizhan' not in list(note.keys()):
                     self.log.info('The word [%s] does not have field of "reminder-baicizhan"', word)
                     continue
 
@@ -66,11 +64,10 @@ class BczHandler():
                     self.log.info('The word [%s] does not exist in bai-ci-zhan', word)
                     continue
 
-
                 if note['baicizhan-mean_cn'] is not None and note['baicizhan-mean_cn'] != '':
                     self.log.info('The word [%s] had been added Chinese translation', word)
                 else:
-                    if 'mean_cn' in data.keys():
+                    if 'mean_cn' in list(data.keys()):
                         note['baicizhan-mean_cn'] = data['mean_cn']
                     else:
                         self.log.info('The word [%s] does not have Chinese translation', word)
@@ -78,7 +75,7 @@ class BczHandler():
                 if note['baicizhan-mean_en'] is not None and note['baicizhan-mean_en'] != '':
                     self.log.info('The word [%s] had been added English translation', word)
                 else:
-                    if 'mean_en' in data.keys():
+                    if 'mean_en' in list(data.keys()):
                         note['baicizhan-mean_en'] = data['mean_en']
                     else:
                         self.log.info('The word [%s] does not have English translation', word)
@@ -86,7 +83,7 @@ class BczHandler():
                 if note['reminder-baicizhan'] is not None and note['reminder-baicizhan'] != '':
                     self.log.info('The word [%s] had been added image', word)
                 else:
-                    if 'image_file' in data.keys():
+                    if 'image_file' in list(data.keys()):
                         self._copy_files(data)
                         content = self._get_anki_content(data)
                         self.log.info('Content: %s' % content)
@@ -97,7 +94,7 @@ class BczHandler():
                 if note['word_etyma'] is not None and note['word_etyma'] != '':
                     self.log.info('The word [%s] had been added etyma', word)
                 else:
-                    if 'word_etyma' in data.keys():
+                    if 'word_etyma' in list(data.keys()):
                         note['word_etyma'] = data['word_etyma']
                     else:
                         self.log.info('The word [%s] does not have etyma', word)
